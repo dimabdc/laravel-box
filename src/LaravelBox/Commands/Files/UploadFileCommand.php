@@ -19,7 +19,6 @@ class UploadFileCommand extends AbstractFileCommand
     public function execute()
     {
         $token = $this->token;
-        $fileId = $this->fileId;
         $cr = curl_init();
         $headers = [
             'Content-Type: multipart/form-data',

@@ -1,14 +1,11 @@
 {
-    "name": "ryanvade/laravel-box",
+    "name": "dimabdc/laravel-box",
     "description": "A Box.com API wrapper for Laravel.",
     "version": "0.0.1",
     "type": "library",
     "require": {
         "illuminate/support": "^5.2",
-        "illuminate/database": "^5.2",
-        "doctrine/dbal": "^2.5",
         "guzzlehttp/guzzle": "^6.2",
-        "nesbot/carbon": "^1.22",
         "illuminate/contracts": "^5.2"
     },
     "license": "MIT",

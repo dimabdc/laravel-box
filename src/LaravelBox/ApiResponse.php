@@ -27,7 +27,7 @@ class ApiResponse
 
     public function isError()
     {
-        return ($this->type == 'errors') || ($this->code > 399) || ($this->exception != null);
+        return ($this->type === 'errors') || ($this->code > 399) || ($this->exception !== null);
     }
 
     public function setCode($code)
@@ -126,7 +126,7 @@ class ApiResponse
         $arr['code'] = $this->code;
         $arr['body'] = $this->body;
         $arr['json'] = $this->json;
-        if ($this->stream != null) {
+        if ($this->stream !== null) {
             $arr['stream'] = $this->stream;
         }
 

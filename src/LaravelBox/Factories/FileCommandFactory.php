@@ -2,186 +2,151 @@
 
 namespace LaravelBox\Factories;
 
-use LaravelBox\Commands\Files\MoveFileCommand;
 use LaravelBox\Commands\Files\CopyFileCommand;
-use LaravelBox\Commands\Files\FileTasksCommand;
-use LaravelBox\Commands\Files\UnLockFileCommand;
-use LaravelBox\Commands\Files\UploadFileCommand;
 use LaravelBox\Commands\Files\DeleteFileCommand;
 use LaravelBox\Commands\Files\DownloadFileCommand;
+use LaravelBox\Commands\Files\FileCollaborationsCommand;
 use LaravelBox\Commands\Files\FileCommentsCommand;
-use LaravelBox\Commands\Files\FileThumbnailCommand;
-use LaravelBox\Commands\Files\PreflightCheckCommand;
 use LaravelBox\Commands\Files\FileEmbeddedLinkCommand;
-use LaravelBox\Commands\Files\UploadFileVersionCommand;
+use LaravelBox\Commands\Files\FileTasksCommand;
+use LaravelBox\Commands\Files\FileThumbnailCommand;
 use LaravelBox\Commands\Files\GetFileInformationCommand;
+use LaravelBox\Commands\Files\LockFileCommand;
+use LaravelBox\Commands\Files\MoveFileCommand;
+use LaravelBox\Commands\Files\PreflightCheckCommand;
+use LaravelBox\Commands\Files\UnLockFileCommand;
+use LaravelBox\Commands\Files\UploadFileCommand;
+use LaravelBox\Commands\Files\UploadFileVersionCommand;
 
 class FileCommandFactory
 {
-    public static function build()
+    public static function build(...$args)
     {
-        if (func_num_args() <= 0) {
+        if (count($args) <= 0) {
             return null;
         }
-        $mode = func_get_arg(func_num_args() - 1);
+
+        $mode = array_pop($args);
         switch ($mode) {
             case 'move':
-                if (func_num_args() < 4) {
+                if (count($args) < 3) {
                     return null;
                 }
-                $token = func_get_arg(0);
-                $path = func_get_arg(1);
-                $newPath = func_get_arg(2);
 
-                return new MoveFileCommand($token, $path, $newPath);
+                return new MoveFileCommand(...$args);
                 break;
 
             case 'info':
-            if (func_num_args() < 3) {
-                return null;
-            }
-            $token = func_get_arg(0);
-            $path = func_get_arg(1);
+                if (count($args) < 2) {
+                    return null;
+                }
 
-            return new GetFileInformationCommand($token, $path);
+                return new GetFileInformationCommand(...$args);
                 break;
 
             case 'download':
-            if (func_num_args() < 4) {
-                return null;
-            }
-            $token = func_get_arg(0);
-            $local = func_get_arg(1);
-            $remote = func_get_arg(2);
+                if (count($args) < 3) {
+                    return null;
+                }
 
-            return new DownloadFileCommand($token, $local, $remote);
+                return new DownloadFileCommand(...$args);
                 break;
 
             case 'upload':
-            if (func_num_args() < 4) {
-                return null;
-            }
-            $token = func_get_arg(0);
-            $localPath = func_get_arg(1);
-            $remotePath = func_get_arg(2);
+                if (count($args) < 3) {
+                    return null;
+                }
 
-            return new UploadFileCommand($token, $localPath, $remotePath);
+                return new UploadFileCommand(...$args);
                 break;
 
             case 'upload-version':
-            if (func_num_args() < 4) {
-                return null;
-            }
-            $token = func_get_arg(0);
-            $localPath = func_get_arg(1);
-            $remotePath = func_get_arg(2);
+                if (count($args) < 3) {
+                    return null;
+                }
 
-            return new UploadFileVersionCommand($token, $localPath, $remotePath);
+                return new UploadFileVersionCommand(...$args);
                 break;
 
             case 'flight-check':
-            if (func_num_args() < 4) {
-                return null;
-            }
-            $token = func_get_arg(0);
-            $localPath = func_get_arg(1);
-            $remotePath = func_get_arg(2);
+                if (count($args) < 3) {
+                    return null;
+                }
 
-            return new PreflightCheckCommand($token, $localPath, $remotePath);
+                return new PreflightCheckCommand(...$args);
                 break;
 
             case 'delete':
-            if (func_num_args() < 3) {
-                return null;
-            }
-            $token = func_get_arg(0);
-            $path = func_get_arg(1);
+                if (count($args) < 2) {
+                    return null;
+                }
 
-            return new DeleteFileCommand($token, $path);
+                return new DeleteFileCommand(...$args);
                 break;
 
             case 'copy':
-            if (func_num_args() < 4) {
-                return null;
-            }
-            $token = func_get_arg(0);
-            $path = func_get_arg(1);
-            $newPath = func_get_arg(2);
+                if (count($args) < 3) {
+                    return null;
+                }
 
-            return new CopyFileCommand($token, $path, $newPath);
-            break;
+                return new CopyFileCommand(...$args);
+                break;
 
             case 'file-lock':
-            if (func_num_args() < 3) {
-                return null;
-            }
-            $token = func_get_arg(0);
-            $path = func_get_arg(1);
+                if (count($args) < 2) {
+                    return null;
+                }
 
-            return new LockFileCommand($token, $path);
-            break;
+                return new LockFileCommand(...$args);
+                break;
 
             case 'file-unlock':
-            if (func_num_args() < 3) {
-                return null;
-            }
-            $token = func_get_arg(0);
-            $path = func_get_arg(1);
+                if (count($args) < 2) {
+                    return null;
+                }
 
-            return new UnLockFileCommand($token, $path);
-            break;
+                return new UnLockFileCommand(...$args);
+                break;
 
             case 'thumbnail':
-            if (func_num_args() < 5) {
-                return null;
-            }
-            $token = func_get_arg(0);
-            $path = func_get_arg(1);
-            $outPath = func_get_arg(2);
-            $extension = func_get_arg(3);
+                if (count($args) < 4) {
+                    return null;
+                }
 
-            return new FileThumbnailCommand($token, $path, $outPath, $extension);
-            break;
+                return new FileThumbnailCommand(...$args);
+                break;
 
             case 'embed-link':
-            if (func_num_args() < 3) {
-                return null;
-            }
-            $token = func_get_arg(0);
-            $path = func_get_arg(1);
+                if (count($args) < 2) {
+                    return null;
+                }
 
-            return new FileEmbeddedLinkCommand($token, $path);
-            break;
+                return new FileEmbeddedLinkCommand(...$args);
+                break;
 
             case 'collaborations':
-            if (func_num_args() < 3) {
-                return null;
-            }
-            $token = func_get_arg(0);
-            $path = func_get_arg(1);
+                if (count($args) < 2) {
+                    return null;
+                }
 
-            return new FileCollaborationsCommand($token, $path);
-            break;
+                return new FileCollaborationsCommand(...$args);
+                break;
 
             case 'comments':
-            if (func_num_args() < 3) {
-                return null;
-            }
-            $token = func_get_arg(0);
-            $path = func_get_arg(1);
+                if (count($args) < 2) {
+                    return null;
+                }
 
-            return new FileCommentsCommand($token, $path);
-            break;
+                return new FileCommentsCommand(...$args);
+                break;
 
             case 'tasks':
-            if (func_num_args() < 3) {
-                return null;
-            }
-            $token = func_get_arg(0);
-            $path = func_get_arg(1);
+                if (count($args) < 2) {
+                    return null;
+                }
 
-            return new FileTasksCommand($token, $path);
-            break;
+                return new FileTasksCommand(...$args);
+                break;
             default:
                 return null;
                 break;

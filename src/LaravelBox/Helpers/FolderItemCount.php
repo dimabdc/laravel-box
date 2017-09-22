@@ -2,6 +2,7 @@
 
 namespace LaravelBox\Helpers;
 
+use GuzzleHttp\Exception\ClientException;
 use LaravelBox\Commands\AbstractCommand;
 
 class FolderItemCount extends AbstractCommand

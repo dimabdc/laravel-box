@@ -2,68 +2,69 @@
 
 namespace LaravelBox\Factories;
 
-use LaravelBox\Commands\Streams\UploadStreamCommand;
 use LaravelBox\Commands\Streams\DownloadStreamCommand;
-use LaravelBox\Commands\Streams\UploadStreamVersionCommand;
-use LaravelBox\Commands\Streams\UploadStreamContentsCommand;
 use LaravelBox\Commands\Streams\DownloadThumbnailStreamCommand;
+use LaravelBox\Commands\Streams\UploadStreamCommand;
+use LaravelBox\Commands\Streams\UploadStreamContentsCommand;
 use LaravelBox\Commands\Streams\UploadStreamContentsVersionCommand;
+use LaravelBox\Commands\Streams\UploadStreamVersionCommand;
 
 class StreamCommandFactory
 {
-    public static function build()
+    public static function build(...$args)
     {
-        if (func_num_args() < 1) {
+        if (count($args) <= 0) {
             return null;
         }
 
-        $command = func_get_arg(func_num_args() - 1);
+        $command = array_pop($args);
         switch ($command) {
             case 'upload':
-                $token = func_get_arg(0);
-                $contents = func_get_arg(1);
-                $remotePath = func_get_arg(2);
+                if (count($args) < 3) {
+                    return null;
+                }
 
-                return new UploadStreamCommand($token, $contents, $remotePath);
+                return new UploadStreamCommand(...$args);
                 break;
 
             case 'upload-version':
-                $token = func_get_arg(0);
-                $contents = func_get_arg(1);
-                $remotePath = func_get_arg(2);
+                if (count($args) < 3) {
+                    return null;
+                }
 
-                return new UploadStreamVersionCommand($token, $contents, $remotePath);
+                return new UploadStreamVersionCommand(...$args);
                 break;
 
             case 'upload-stream':
-                $token = func_get_arg(0);
-                $contents = func_get_arg(1);
-                $remotePath = func_get_arg(2);
+                if (count($args) < 3) {
+                    return null;
+                }
 
-                return new UploadStreamContentsCommand($token, $contents, $remotePath);
+                return new UploadStreamContentsCommand(...$args);
                 break;
 
             case 'upload-stream-version':
-                $token = func_get_arg(0);
-                $contents = func_get_arg(1);
-                $remotePath = func_get_arg(2);
+                if (count($args) < 3) {
+                    return null;
+                }
 
-                return new UploadStreamContentsVersionCommand($token, $contents, $remotePath);
+                return new UploadStreamContentsVersionCommand(...$args);
                 break;
 
             case 'download':
-                $token = func_get_arg(0);
-                $path = func_get_arg(1);
+                if (count($args) < 2) {
+                    return null;
+                }
 
-                return new DownloadStreamCommand($token, $path);
+                return new DownloadStreamCommand(...$args);
                 break;
 
             case 'thumbnail':
-                $token = func_get_arg(0);
-                $path = func_get_arg(1);
-                $extension = func_get_arg(2);
+                if (count($args) < 3) {
+                    return null;
+                }
 
-                return new DownloadThumbnailStreamCommand($token, $path, $extension);
+                return new DownloadThumbnailStreamCommand(...$args);
                 break;
 
             default:
