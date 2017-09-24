@@ -3,10 +3,6 @@
 namespace LaravelBox\Commands\Files;
 
 use GuzzleHttp\Client;
-use GuzzleHttp\Exception\ClientException;
-use GuzzleHttp\Exception\ServerException;
-use GuzzleHttp\Exception\RequestException;
-use GuzzleHttp\Exception\TransferException;
 use LaravelBox\Factories\ApiResponseFactory;
 
 class FileEmbeddedLinkCommand extends AbstractFileCommand
@@ -22,14 +18,13 @@ class FileEmbeddedLinkCommand extends AbstractFileCommand
     {
         $token = $this->token;
         $fileId = $this->fileId;
-        $folderId = $this->folderId;
-        $url = "https://api.box.com/2.0/files/${fileId}";
+        $url = "https://api.box.com/2.0/files/{$fileId}";
         $options = [
             'query' => [
                 'fields' => 'expiring_embed_link',
             ],
             'headers' => [
-                'Authorization' => "Bearer ${token}",
+                'Authorization' => "Bearer {$token}",
             ],
         ];
 
@@ -38,14 +33,8 @@ class FileEmbeddedLinkCommand extends AbstractFileCommand
             $req = $client->request('GET', $url, $options);
 
             return ApiResponseFactory::build($req);
-        } catch (ClientException $e) {
+        } catch (\Exception $e) {
             return ApiResponseFactory::build($e);
-        } catch (ServerException $e) {
-            return ApiResponseFactory::build($e);
-        } catch (TransferException $e) {
-            return ApiResponseFactory($e);
-        } catch (RequestException $e) {
-            return ApiResponseFactory($e);
         }
     }
 }

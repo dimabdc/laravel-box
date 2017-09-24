@@ -19,7 +19,6 @@ class UploadStreamCommand extends AbstractCommand
 
     public function execute()
     {
-        $token = $this->token;
         $cr = curl_init();
         $fw = tmpfile();
         $meta = stream_get_meta_data($fw);
@@ -27,7 +26,7 @@ class UploadStreamCommand extends AbstractCommand
         rewind($fw);
         $headers = [
             'Content-Type: multipart/form-data',
-            "Authorization: Bearer ${token}",
+            "Authorization: Bearer {$this->token}",
         ];
         curl_setopt($cr, CURLOPT_HTTPHEADER, $headers);
         curl_setopt($cr, CURLOPT_URL, 'https://upload.box.com/api/2.0/files/content');
@@ -47,7 +46,7 @@ class UploadStreamCommand extends AbstractCommand
             $response = curl_exec($cr);
 
             return ApiResponseFactory::build($response);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return ApiResponseFactory::build($e);
         } finally {
             curl_close($cr);

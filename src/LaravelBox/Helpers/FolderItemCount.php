@@ -2,6 +2,7 @@
 
 namespace LaravelBox\Helpers;
 
+use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use LaravelBox\Commands\AbstractCommand;
 
@@ -23,14 +24,14 @@ class FolderItemCount extends AbstractCommand
             return -1;
         }
 
-        $url = "https://api.box.com/2.0/folders/${folderId}";
+        $url = "https://api.box.com/2.0/folders/{$folderId}";
         $options = [
             'headers' => [
-                'Authorization' => "Bearer ${token}",
+                'Authorization' => "Bearer {$token}",
             ],
         ];
         try {
-            $client = new \GuzzleHttp\Client();
+            $client = new Client();
             $req = $client->request('GET', $url, $options);
             $json = json_decode($req->getBody());
 

@@ -4,16 +4,16 @@ namespace LaravelBox;
 
 class ApiResponse
 {
-    private $type = null;
-    private $code = null;
-    private $message = null;
-    private $body = null;
-    private $json = null;
-    private $request = null;
-    private $reason = null;
+    private $type      = null;
+    private $code      = null;
+    private $message   = null;
+    private $body      = null;
+    private $json      = null;
+    private $request   = null;
+    private $reason    = null;
     private $exception = null;
-    private $fileName = null;
-    private $stream = null;
+    private $fileName  = null;
+    private $stream    = null;
 
     public function __construct($type)
     {
@@ -122,7 +122,7 @@ class ApiResponse
 
     public function toArray()
     {
-        $arr = array();
+        $arr         = [];
         $arr['code'] = $this->code;
         $arr['body'] = $this->body;
         $arr['json'] = $this->json;

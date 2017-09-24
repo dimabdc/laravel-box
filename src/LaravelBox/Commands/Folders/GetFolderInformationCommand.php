@@ -3,7 +3,6 @@
 namespace LaravelBox\Commands\Folders;
 
 use GuzzleHttp\Client;
-use GuzzleHttp\Exception\ClientException;
 use LaravelBox\Factories\ApiResponseFactory;
 
 class GetFolderInformationCommand extends AbstractFolderCommand
@@ -16,12 +15,10 @@ class GetFolderInformationCommand extends AbstractFolderCommand
 
     public function execute()
     {
-        $folderId = $this->fileId;
-        $token = $this->token;
-        $url = "https://api.box.com/2.0/folders/${folderId}";
+        $url = "https://api.box.com/2.0/folders/{$this->fileId}";
         $options = [
         'headers' => [
-            'Authorization' => "Bearer ${token}",
+            'Authorization' => "Bearer {$this->token}",
         ],
         ];
 
@@ -30,14 +27,8 @@ class GetFolderInformationCommand extends AbstractFolderCommand
             $req = $client->request('GET', $url, $options);
 
             return ApiResponseFactory::build($req);
-        } catch (ClientException $e) {
+        } catch (\Exception $e) {
             return ApiResponseFactory::build($e);
-        } catch (ServerException $e) {
-            return ApiResponseFactory::build($e);
-        } catch (TransferException $e) {
-            return ApiResponseFactory($e);
-        } catch (RequestException $e) {
-            return ApiResponseFactory($e);
         }
     }
 }

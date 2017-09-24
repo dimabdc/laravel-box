@@ -6,7 +6,9 @@ use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Exception\ServerException;
 use GuzzleHttp\Exception\TransferException;
+use GuzzleHttp\PSr7\Stream;
 use LaravelBox\ApiResponse;
+use GuzzleHttp\Psr7\Response;
 
 class ApiResponseFactory
 {
@@ -16,7 +18,7 @@ class ApiResponseFactory
             return null;
         }
 
-        if (func_num_args() == 2 && func_get_arg(1) instanceof \GuzzleHttp\PSr7\Stream) {
+        if (func_num_args() == 2 && func_get_arg(1) instanceof Stream) {
             return self::handleStreamResponse(func_get_arg(0), func_get_arg(1));
         }
 
@@ -90,7 +92,7 @@ class ApiResponseFactory
 
     private static function getCurlResponse($arg)
     {
-        if ($arg instanceof Exception) {
+        if ($arg instanceof \Exception) {
             $exception = func_get_arg(0);
             $type      = 'errors';
             $code      = $exception->getCode();
@@ -155,17 +157,17 @@ class ApiResponseFactory
 
     private static function isAResponse($arg)
     {
-        return is_a($arg, "GuzzleHttp\Psr7\Response");
+        return is_a($arg, Response::class);
     }
 
     private static function isFileDownload($arg)
     {
-        return $arg->hasHeader('Content-Type') && $arg->getHeaderLine('Content-Type') == 'application/octet-stream';
+        return $arg->hasHeader('Content-Type') && $arg->getHeaderLine('Content-Type') === 'application/octet-stream';
     }
 
     private static function isJsonDownload($arg)
     {
-        return $arg->hasHeader('Content-Type') && $arg->getHeaderLine('Content-Type') == 'application/octet-stream';
+        return $arg->hasHeader('Content-Type') && $arg->getHeaderLine('Content-Type') === 'application/octet-stream';
     }
 
     private static function handleStreamResponse($arg, $stream)

@@ -3,10 +3,7 @@
 namespace LaravelBox\Commands\Files;
 
 use GuzzleHttp\Client;
-use GuzzleHttp\Exception\ClientException;
-use GuzzleHttp\Exception\ServerException;
-use GuzzleHttp\Exception\RequestException;
-use GuzzleHttp\Exception\TransferException;
+use function GuzzleHttp\Psr7\stream_for;
 use LaravelBox\Factories\ApiResponseFactory;
 
 class DownloadFileCommand extends AbstractFileCommand
@@ -25,11 +22,12 @@ class DownloadFileCommand extends AbstractFileCommand
     {
         $fileId = $this->fileId;
         $token = $this->token;
-        $url = "https://api.box.com/2.0/files/${fileId}/content";
+        $url = "https://api.box.com/2.0/files/{$fileId}/content";
+        $stream = stream_for(tmpfile());
         $options = [
-            'sink' => fopen($this->downloadPath, 'w'),
+            'sink' => $stream,
             'headers' => [
-                'Authorization' => "Bearer ${token}",
+                'Authorization' => "Bearer {$token}",
             ],
         ];
         try {
@@ -37,14 +35,8 @@ class DownloadFileCommand extends AbstractFileCommand
             $resp = $client->request('GET', $url, $options);
 
             return ApiResponseFactory::build($resp);
-        } catch (ClientException $e) {
+        } catch (\Exception $e) {
             return ApiResponseFactory::build($e);
-        } catch (ServerException $e) {
-            return ApiResponseFactory::build($e);
-        } catch (TransferException $e) {
-            return ApiResponseFactory($e);
-        } catch (RequestException $e) {
-            return ApiResponseFactory($e);
         }
     }
 }

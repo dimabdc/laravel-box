@@ -3,7 +3,6 @@
 namespace LaravelBox\Commands\Files;
 
 use GuzzleHttp\Client;
-use GuzzleHttp\Exception\ClientException;
 use LaravelBox\Factories\ApiResponseFactory;
 
 class GetFileInformationCommand extends AbstractFileCommand
@@ -19,10 +18,10 @@ class GetFileInformationCommand extends AbstractFileCommand
     {
         $fileId = $this->fileId;
         $token = $this->token;
-        $url = "https://api.box.com/2.0/files/${fileId}";
+        $url = "https://api.box.com/2.0/files/{$fileId}";
         $options = [
         'headers' => [
-            'Authorization' => "Bearer ${token}",
+            'Authorization' => "Bearer {$token}",
         ],
         ];
 
@@ -31,14 +30,8 @@ class GetFileInformationCommand extends AbstractFileCommand
             $req = $client->request('GET', $url, $options);
 
             return ApiResponseFactory::build($req);
-        } catch (ClientException $e) {
+        } catch (\Exception $e) {
             return ApiResponseFactory::build($e);
-        } catch (ServerException $e) {
-            return ApiResponseFactory::build($e);
-        } catch (TransferException $e) {
-            return ApiResponseFactory($e);
-        } catch (RequestException $e) {
-            return ApiResponseFactory($e);
         }
     }
 }

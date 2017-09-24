@@ -2,6 +2,7 @@
 
 namespace LaravelBox\Commands\Files;
 
+use GuzzleHttp\Client;
 use LaravelBox\Factories\ApiResponseFactory;
 
 class PreflightCheckCommand extends AbstractFileCommand
@@ -11,39 +12,35 @@ class PreflightCheckCommand extends AbstractFileCommand
 
     public function __construct(string $token, string $localPath, string $remotePath)
     {
-        $this->token = $token;
-        $this->localPath = $localPath;
+        $this->token      = $token;
+        $this->localPath  = $localPath;
         $this->remotePath = $remotePath;
     }
 
     public function execute()
     {
-        $token = $this->token;
-        $cr = curl_init();
-        $headers = [
-            'Content-Type: multipart/form-data',
-            "Authorization: Bearer ${token}",
-        ];
-        curl_setopt($cr, CURLOPT_CUSTOMREQUEST, 'OPTIONS');
-        curl_setopt($cr, CURLOPT_HTTPHEADER, $headers);
-        curl_setopt($cr, CURLOPT_URL, 'https://api.box.com/2.0/files/content');
-        $fields = [
-            'name' => basename($this->localPath),
+        $url     = 'https://api.box.com/2.0/files/content';
+        $body    = [
+            'name'   => basename($this->localPath),
             'parent' => [
                 'id' => $this->getFolderId(dirname($this->remotePath)),
             ],
-            'size' => filesize($this->localPath),
+            'size'   => filesize($this->localPath),
         ];
-        curl_setopt($cr, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($cr, CURLOPT_POSTFIELDS, json_encode($fields));
-        try {
-            $response = curl_exec($cr);
+        $options = [
+            'headers' => [
+                'Authorization' => "Bearer {$this->token}",
+            ],
+            'body'    => json_encode($body),
+        ];
 
-            return ApiResponseFactory::build($response);
-        } catch (Exception $e) {
+        try {
+            $client = new Client();
+            $req    = $client->request('OPTIONS', $url, $options);
+
+            return ApiResponseFactory::build($req);
+        } catch (\Exception $e) {
             return ApiResponseFactory::build($e);
-        } finally {
-            curl_close($cr);
         }
     }
 }

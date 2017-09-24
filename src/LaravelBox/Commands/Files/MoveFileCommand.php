@@ -21,9 +21,7 @@ class MoveFileCommand extends AbstractFileCommand
 
     public function execute()
     {
-        $fileId  = $this->fileId;
-        $token   = $this->token;
-        $url     = "https://api.box.com/2.0/files/${fileId}";
+        $url     = "https://api.box.com/2.0/files/{$this->fileId}";
         $body    = [
             'name'   => basename($this->newPath),
             'parent' => [
@@ -32,7 +30,7 @@ class MoveFileCommand extends AbstractFileCommand
         ];
         $options = [
             'headers' => [
-                'Authorization' => "Bearer ${token}",
+                'Authorization' => "Bearer {$this->token}",
             ],
             'body'    => json_encode($body),
         ];

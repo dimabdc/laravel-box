@@ -2,10 +2,10 @@
 
 namespace LaravelBox;
 
-use LaravelBox\Helpers\FolderItemCount;
 use LaravelBox\Factories\FileCommandFactory;
 use LaravelBox\Factories\FolderCommandFactory;
 use LaravelBox\Factories\StreamCommandFactory;
+use LaravelBox\Helpers\FolderItemCount;
 
 class LaravelBox
 {

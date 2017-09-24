@@ -60,7 +60,7 @@ abstract class AbstractCommand
     public function fileExists(string $fileId)
     {
         try {
-            $url     = "https://api.box.com/2.0/files/${fileId}";
+            $url     = "https://api.box.com/2.0/files/{$fileId}";
             $options = [
                 'headers' => [
                     'Authorization' => "Bearer {$this->token}",
@@ -78,7 +78,7 @@ abstract class AbstractCommand
     public function folderExists(string $folderId)
     {
         try {
-            $url     = "https://api.box.com/2.0/folders/${folderId}";
+            $url     = "https://api.box.com/2.0/folders/{$folderId}";
             $options = [
                 'headers' => [
                     'Authorization' => "Bearer {$this->token}",
@@ -99,11 +99,10 @@ abstract class AbstractCommand
             return -1;
         }
 
-        $token   = $this->token;
-        $url     = "https://api.box.com/2.0/folders/${folderId}";
+        $url     = "https://api.box.com/2.0/folders/{$folderId}";
         $options = [
             'headers' => [
-                'Authorization' => "Bearer ${token}",
+                'Authorization' => "Bearer {$this->token}",
             ],
         ];
         try {
@@ -121,16 +120,15 @@ abstract class AbstractCommand
     {
         $limit_min = 100;
         $limit_max = 1000;
-        $token     = $this->token;
-        $url       = "https://api.box.com/2.0/folders/${folderId}/items";
+        $url       = "https://api.box.com/2.0/folders/{$folderId}/items";
         $options   = [
             'headers' => [
-                'Authorization' => "Bearer ${token}",
+                'Authorization' => "Bearer {$this->token}",
             ],
             'query'   => [
                 'fields' => 'name',
                 'offset' => ($offset < 0) ? 0 : $offset,
-                'limit'  => ($limit < 0) ? $limit_min : ($limit > $limit_max) ? $limit_max : $limit,
+                'limit'  => ($limit < 0) ? $limit_min : ($limit > $limit_max ? $limit_max : $limit),
             ],
         ];
         try {

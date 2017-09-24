@@ -26,16 +26,16 @@ class CopyFileCommand extends AbstractFileCommand
         $token = $this->token;
         $fileId = $this->fileId;
         $folderId = parent::getFolderId(dirname($this->newPath));
-        $url = "https:/api.box.com/2.0/files/${fileId}/copy";
+        $url = "https:/api.box.com/2.0/files/{$fileId}/copy";
         $body = [
             'parent' => [
-                'id' => "${folderId}",
+                'id' => "{$folderId}",
             ],
         ];
         $options = [
             'body' => json_encode($body),
             'headers' => [
-                'Authorization' => "Bearer ${token}",
+                'Authorization' => "Bearer {$token}",
             ],
         ];
         try {
@@ -43,14 +43,8 @@ class CopyFileCommand extends AbstractFileCommand
             $req = $client->request('POST', $url, $options);
 
             return ApiResponseFactory::build($req);
-        } catch (ClientException $e) {
+        } catch (\Exception $e) {
             return ApiResponseFactory::build($e);
-        } catch (ServerException $e) {
-            return ApiResponseFactory::build($e);
-        } catch (TransferException $e) {
-            return ApiResponseFactory($e);
-        } catch (RequestException $e) {
-            return ApiResponseFactory($e);
         }
     }
 }

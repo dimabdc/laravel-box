@@ -3,10 +3,6 @@
 namespace LaravelBox\Commands\Folders;
 
 use GuzzleHttp\Client;
-use GuzzleHttp\Exception\ClientException;
-use GuzzleHttp\Exception\ServerException;
-use GuzzleHttp\Exception\RequestException;
-use GuzzleHttp\Exception\TransferException;
 use LaravelBox\Factories\ApiResponseFactory;
 
 class DeleteFolderCommand extends AbstractFolderCommand
@@ -15,38 +11,29 @@ class DeleteFolderCommand extends AbstractFolderCommand
 
     public function __construct(string $token, string $path, $recursive)
     {
-        $this->token = $token;
+        $this->token     = $token;
         $this->recursive = $recursive;
-        $this->folderId = parent::getFolderId($path);
+        $this->folderId  = parent::getFolderId($path);
     }
 
     public function execute()
     {
-        $token = $this->token;
-        $folderId = $this->folderId;
-        $recursive = $this->recursive;
-        $url = "https://api.box.com/2.0/folders/${folderId}";
+        $url     = "https://api.box.com/2.0/folders/{$this->folderId}";
         $options = [
-            'query' => [
-                'recursive' => ($recursive === true) ? 'true' : 'false',
+            'query'   => [
+                'recursive' => ($this->recursive === true) ? 'true' : 'false',
             ],
             'headers' => [
-                'Authorization' => "Bearer ${token}",
+                'Authorization' => "Bearer {$this->token}",
             ],
         ];
         try {
             $client = new Client();
-            $resp = $client->request('DELETE', $url, $options);
+            $resp   = $client->request('DELETE', $url, $options);
 
             return ApiResponseFactory::build($resp);
-        } catch (ClientException $e) {
+        } catch (\Exception $e) {
             return ApiResponseFactory::build($e);
-        } catch (ServerException $e) {
-            return ApiResponseFactory::build($e);
-        } catch (TransferException $e) {
-            return ApiResponseFactory($e);
-        } catch (RequestException $e) {
-            return ApiResponseFactory($e);
         }
     }
 }

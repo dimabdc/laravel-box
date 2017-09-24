@@ -21,16 +21,14 @@ class UploadStreamContentsVersionCommand extends AbstractCommand
 
     public function execute()
     {
-        $token = $this->token;
-        $fileId = $this->fileId;
         $cr = curl_init();
         $meta = stream_get_meta_data($this->resource);
         $headers = [
             'Content-Type: multipart/form-data',
-            "Authorization: Bearer ${token}",
+            "Authorization: Bearer {$this->token}",
         ];
         curl_setopt($cr, CURLOPT_HTTPHEADER, $headers);
-        curl_setopt($cr, CURLOPT_URL, "https://upload.box.com/api/2.0/files/${fileId}/content");
+        curl_setopt($cr, CURLOPT_URL, "https://upload.box.com/api/2.0/files/{$this->fileId}/content");
         $json = json_encode([
             'name' => basename($this->remotePath),
             'parent' => [
@@ -47,7 +45,7 @@ class UploadStreamContentsVersionCommand extends AbstractCommand
             $response = curl_exec($cr);
 
             return ApiResponseFactory::build($response);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return ApiResponseFactory::build($e);
         } finally {
             curl_close($cr);

@@ -3,10 +3,6 @@
 namespace LaravelBox\Commands\Folders;
 
 use GuzzleHttp\Client;
-use GuzzleHttp\Exception\ClientException;
-use GuzzleHttp\Exception\ServerException;
-use GuzzleHttp\Exception\RequestException;
-use GuzzleHttp\Exception\TransferException;
 use LaravelBox\Factories\ApiResponseFactory;
 
 class GetFolderItemsCommand extends AbstractFolderCommand
@@ -24,18 +20,16 @@ class GetFolderItemsCommand extends AbstractFolderCommand
 
     public function execute()
     {
-        $token = $this->token;
-        $folderId = $this->folderId;
         $offset = $this->offset;
         $limit = $this->limit;
-        $url = "https://api.box.com/2.0/folders/${folderId}/items";
+        $url = "https://api.box.com/2.0/folders/{$this->folderId}/items";
         $options = [
             'query' => [
                 'offset' => ($offset >= 0) ? $offset : 0,
-                'limit' => ($limit >= 1) ? ($limit <= 1000) ? $limit : 1000 : 1,
+                'limit' => ($limit >= 1) ? ($limit <= 1000 ? $limit : 1000) : 1,
             ],
             'headers' => [
-                'Authorization' => "Bearer ${token}",
+                'Authorization' => "Bearer {$this->token}",
             ],
         ];
         try {
@@ -43,14 +37,8 @@ class GetFolderItemsCommand extends AbstractFolderCommand
             $resp = $client->request('GET', $url, $options);
 
             return ApiResponseFactory::build($resp);
-        } catch (ClientException $e) {
+        } catch (\Exception $e) {
             return ApiResponseFactory::build($e);
-        } catch (ServerException $e) {
-            return ApiResponseFactory::build($e);
-        } catch (TransferException $e) {
-            return ApiResponseFactory($e);
-        } catch (RequestException $e) {
-            return ApiResponseFactory($e);
         }
     }
 }
