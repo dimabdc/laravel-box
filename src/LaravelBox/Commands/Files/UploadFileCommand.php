@@ -22,7 +22,7 @@ class UploadFileCommand extends AbstractFileCommand
         $url = 'https://upload.box.com/api/2.0/files/content';
 
         $json = json_encode([
-            'name'   => basename($this->localPath),
+            'name'   => basename($this->remotePath),
             'parent' => [
                 'id' => $this->getFolderId(dirname($this->remotePath)),
             ],
@@ -30,13 +30,13 @@ class UploadFileCommand extends AbstractFileCommand
 
         $body    = [
             'attributes' => $json,
-            'file'       => fopen($this->localPath, 'br'),
+            'file'       => $this->localPath,
         ];
         $options = [
             'headers' => [
                 'Authorization' => "Bearer {$this->token}",
             ],
-            'body'    => json_encode($body),
+            'body'    => $body,
         ];
 
         try {
