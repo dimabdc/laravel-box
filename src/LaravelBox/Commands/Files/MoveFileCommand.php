@@ -10,13 +10,13 @@ class MoveFileCommand extends AbstractFileCommand
     private $newPath;
     private $oldPath;
 
-    public function __construct(string $token, string $path, string $newPath)
+    public function __construct(string $token, $path, $newPath)
     {
         $this->oldPath  = $path;
         $this->newPath  = $newPath;
         $this->token    = $token;
-        $this->fileId   = parent::getFileId($path);
-        $this->folderId = parent::getFolderId(dirname($path));
+        $this->fileId   = is_string($path) ? parent::getFileId($path) : $path;
+        $this->folderId = is_string($newPath) ? parent::getFolderId(dirname($path)) : $newPath;
     }
 
     public function execute()

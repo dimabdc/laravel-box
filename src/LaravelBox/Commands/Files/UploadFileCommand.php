@@ -10,7 +10,7 @@ class UploadFileCommand extends AbstractFileCommand
     private $localPath;
     private $remotePath;
 
-    public function __construct(string $token, $localPath, string $remotePath)
+    public function __construct(string $token, $localPath, $remotePath)
     {
         $this->token      = $token;
         $this->localPath  = $localPath;
@@ -35,7 +35,8 @@ class UploadFileCommand extends AbstractFileCommand
             ],
             [
                 'name'     => 'file',
-                'contents' => $this->localPath
+                'contents' => $this->localPath,
+                'filename' => basename($this->remotePath)
             ]
         ];
         $options = [

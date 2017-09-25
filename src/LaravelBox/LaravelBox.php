@@ -5,6 +5,7 @@ namespace LaravelBox;
 use LaravelBox\Factories\FileCommandFactory;
 use LaravelBox\Factories\FolderCommandFactory;
 use LaravelBox\Factories\StreamCommandFactory;
+use LaravelBox\Helpers\FileAccessTokenCommand;
 use LaravelBox\Helpers\FolderItemCount;
 
 class LaravelBox
@@ -16,7 +17,7 @@ class LaravelBox
         $this->token = $token;
     }
 
-    public function moveFile(string $path, string $newPath)
+    public function moveFile($path, $newPath)
     {
         $command = FileCommandFactory::build($this->token, $path, $newPath, 'move');
 
@@ -44,7 +45,7 @@ class LaravelBox
         return $command->execute();
     }
 
-    public function uploadFile(string $localPath, string $remotePath)
+    public function uploadFile($localPath, string $remotePath)
     {
         $command = FileCommandFactory::build($this->token, $localPath, $remotePath, 'upload');
 
@@ -181,6 +182,13 @@ class LaravelBox
     public function getFolderItemsCount(string $path)
     {
         $command = new FolderItemCount($this->token, $path);
+
+        return $command->execute();
+    }
+
+    public function fileAccessToken($path)
+    {
+        $command = new FileAccessTokenCommand($this->token, $path);
 
         return $command->execute();
     }
