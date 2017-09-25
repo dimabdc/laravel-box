@@ -7,21 +7,18 @@ use LaravelBox\Factories\ApiResponseFactory;
 
 class DeleteFileCommand extends AbstractFileCommand
 {
-    public function __construct(string $token, string $path)
+    public function __construct(string $token, $path)
     {
         $this->token = $token;
-        $this->fileId = parent::getFileId($path);
-        $this->folderId = parent::getFolderId(dirname($path));
+        $this->fileId = is_string($path) ? parent::getFileId($path) : $path;
     }
 
     public function execute()
     {
-        $token = $this->token;
-        $fileId = $this->fileId;
-        $url = "https://api.box.com/2.0/files/{$fileId}";
+        $url = "https://api.box.com/2.0/files/{$this->fileId}";
         $options = [
             'headers' => [
-                'Authorization' => "Bearer {$token}",
+                'Authorization' => "Bearer {$this->token}",
             ],
         ];
         try {
