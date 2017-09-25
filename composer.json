@@ -5,8 +5,7 @@
     "type": "library",
     "require": {
         "illuminate/support": "^5.2",
-        "guzzlehttp/guzzle": "^6.2",
-        "illuminate/contracts": "^5.2"
+        "guzzlehttp/guzzle": "^6.2"
     },
     "license": "MIT",
     "authors": [
