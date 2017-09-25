@@ -29,14 +29,20 @@ class UploadFileCommand extends AbstractFileCommand
         ]);
 
         $body    = [
-            'attributes' => $json,
-            'file'       => $this->localPath,
+            [
+                'name'     => 'attributes',
+                'contents' => $json
+            ].
+            [
+                'name'     => 'file',
+                'contents' => $this->localPath
+            ]
         ];
         $options = [
             'headers' => [
                 'Authorization' => "Bearer {$this->token}",
             ],
-            'body'    => $body,
+            'multipart'    => $body,
         ];
 
         try {
