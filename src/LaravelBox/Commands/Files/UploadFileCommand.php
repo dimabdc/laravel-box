@@ -32,7 +32,7 @@ class UploadFileCommand extends AbstractFileCommand
             [
                 'name'     => 'attributes',
                 'contents' => $json
-            ].
+            ],
             [
                 'name'     => 'file',
                 'contents' => $this->localPath
