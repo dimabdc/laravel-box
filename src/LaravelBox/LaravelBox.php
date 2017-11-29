@@ -2,6 +2,7 @@
 
 namespace LaravelBox;
 
+use LaravelBox\Factories\AuthCommandFactory;
 use LaravelBox\Factories\FileCommandFactory;
 use LaravelBox\Factories\FolderCommandFactory;
 use LaravelBox\Factories\StreamCommandFactory;
@@ -31,9 +32,9 @@ class LaravelBox
         return $command->execute();
     }
 
-    public function fileDownload(string $localPath, string $remotePath)
+    public function fileDownload(string $remotePath)
     {
-        $command = FileCommandFactory::build($this->token, $localPath, $remotePath, 'download');
+        $command = FileCommandFactory::build($this->token, $remotePath, 'download');
 
         return $command->execute();
     }
@@ -189,6 +190,20 @@ class LaravelBox
     public function fileAccessToken($path)
     {
         $command = new FileAccessTokenCommand($this->token, $path);
+
+        return $command->execute();
+    }
+
+    public function authToken(string $code, string $clientId, string $clientSecret)
+    {
+        $command = AuthCommandFactory::build($code, $clientId, $clientSecret, 'token');
+
+        return $command->execute();
+    }
+
+    public function refreshToken(string $token, string $clientId, string $clientSecret)
+    {
+        $command = AuthCommandFactory::build($token, $clientId, $clientSecret, 'refresh');
 
         return $command->execute();
     }

@@ -7,15 +7,15 @@ use LaravelBox\Factories\ApiResponseFactory;
 
 class GetFolderInformationCommand extends AbstractFolderCommand
 {
-    public function __construct(string $token, string $path)
+    public function __construct(string $token, $path)
     {
         $this->token = $token;
-        $this->folderId = parent::getFolderId(dirname($path));
+        $this->folderId = is_string($path) ? $this->getFolderId($path) : $path;
     }
 
     public function execute()
     {
-        $url = "https://api.box.com/2.0/folders/{$this->fileId}";
+        $url = "https://api.box.com/2.0/folders/{$this->folderId}";
         $options = [
         'headers' => [
             'Authorization' => "Bearer {$this->token}",
@@ -28,7 +28,7 @@ class GetFolderInformationCommand extends AbstractFolderCommand
 
             return ApiResponseFactory::build($req);
         } catch (\Exception $e) {
-            return ApiResponseFactory::build($e);
+            return ApiResponseFactory::build($e, ['GET', $url, $options]);
         }
     }
 }

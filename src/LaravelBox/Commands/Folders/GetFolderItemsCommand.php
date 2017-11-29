@@ -13,7 +13,7 @@ class GetFolderItemsCommand extends AbstractFolderCommand
     public function __construct(string $token, string $path, int $offset, int $limit)
     {
         $this->token = $token;
-        $this->folderId = parent::getFolderId($path);
+        $this->folderId = is_string($path) ? $this->getFolderId($path) : $path;
         $this->offset = $offset;
         $this->limit = $limit;
     }

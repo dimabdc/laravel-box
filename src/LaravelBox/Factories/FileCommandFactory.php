@@ -45,7 +45,7 @@ class FileCommandFactory
                 break;
 
             case 'download':
-                if (count($args) < 3) {
+                if (count($args) < 2) {
                     return null;
                 }
 

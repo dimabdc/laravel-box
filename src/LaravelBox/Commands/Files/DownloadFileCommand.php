@@ -8,14 +8,10 @@ use LaravelBox\Factories\ApiResponseFactory;
 
 class DownloadFileCommand extends AbstractFileCommand
 {
-    private $downloadPath;
-
-    public function __construct(string $token, string $local, string $remote)
+    public function __construct(string $token, $remote)
     {
-        $this->downloadPath = $local;
         $this->token = $token;
-        $this->fileId = parent::getFileId($remote);
-        $this->folderId = parent::getFolderId(dirname($remote));
+        $this->fileId = is_string($remote) ? $this->getFileId($remote) : $remote;
     }
 
     public function execute()
