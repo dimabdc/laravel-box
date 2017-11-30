@@ -9,13 +9,15 @@ class GetFolderItemsCommand extends AbstractFolderCommand
 {
     private $offset;
     private $limit;
+    private $fields;
 
-    public function __construct(string $token, string $path, int $offset, int $limit)
+    public function __construct(string $token, string $path, int $offset, int $limit, string $fields = '')
     {
         $this->token = $token;
         $this->folderId = is_string($path) ? $this->getFolderId($path) : $path;
         $this->offset = $offset;
         $this->limit = $limit;
+        $this->fields = $fields;
     }
 
     public function execute()
@@ -27,6 +29,7 @@ class GetFolderItemsCommand extends AbstractFolderCommand
             'query' => [
                 'offset' => ($offset >= 0) ? $offset : 0,
                 'limit' => ($limit >= 1) ? ($limit <= 1000 ? $limit : 1000) : 1,
+                'fields' => $this->fields
             ],
             'headers' => [
                 'Authorization' => "Bearer {$this->token}",

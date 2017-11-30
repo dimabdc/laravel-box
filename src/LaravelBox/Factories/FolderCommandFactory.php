@@ -34,7 +34,7 @@ class FolderCommandFactory
                 break;
 
             case 'list':
-                if (count($args) < 4) {
+                if (count($args) < 5) {
                     return null;
                 }
 

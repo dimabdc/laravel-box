@@ -173,9 +173,9 @@ class LaravelBox
         return $command->execute();
     }
 
-    public function getFolderItems($path, int $offset = 0, int $limit = 100)
+    public function getFolderItems($path, int $offset = 0, int $limit = 100, string $fields = '')
     {
-        $command = FolderCommandFactory::build($this->token, $path, $offset, $limit, 'list');
+        $command = FolderCommandFactory::build($this->token, $path, $offset, $limit, $fields, 'list');
 
         return $command->execute();
     }
