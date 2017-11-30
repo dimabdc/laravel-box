@@ -4,6 +4,7 @@ namespace LaravelBox\Factories;
 
 use LaravelBox\Commands\Folders\CreateFolderCommand;
 use LaravelBox\Commands\Folders\DeleteFolderCommand;
+use LaravelBox\Commands\Folders\GetFolderInformationCommand;
 use LaravelBox\Commands\Folders\GetFolderItemsCommand;
 
 class FolderCommandFactory
@@ -38,6 +39,14 @@ class FolderCommandFactory
                 }
 
                 return new GetFolderItemsCommand(...$args);
+                break;
+
+            case 'info':
+                if (count($args) < 2) {
+                    return null;
+                }
+
+                return new GetFolderInformationCommand(...$args);
                 break;
 
             default:
