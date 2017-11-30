@@ -39,9 +39,11 @@ class ApiResponseFactory
             $type     = 'FILE_DOWNLOAD';
             $code     = $arg->getStatusCode();
             $reason   = $arg->getReasonPhrase();
+            $body     = $arg->getBody();
             $response = new ApiResponse($type);
             $response->setCode($code);
             $response->setReason($reason);
+            $response->setBody($body);
             $response->setRequest($arg);
 
             return $response;
