@@ -11,7 +11,7 @@ class GetFolderItemsCommand extends AbstractFolderCommand
     private $limit;
     private $fields;
 
-    public function __construct(string $token, string $path, int $offset, int $limit, string $fields = '')
+    public function __construct(string $token, $path, int $offset, int $limit, string $fields = '')
     {
         $this->token = $token;
         $this->folderId = is_string($path) ? $this->getFolderId($path) : $path;
