@@ -32,7 +32,7 @@ class LaravelBox
         return $command->execute();
     }
 
-    public function fileDownload(string $remotePath)
+    public function fileDownload($remotePath)
     {
         $command = FileCommandFactory::build($this->token, $remotePath, 'download');
 
