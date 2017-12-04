@@ -136,12 +136,7 @@ class ApiResponseFactory
 
     private static function isFileDownload(ResponseInterface $arg)
     {
-        return $arg->hasHeader('Content-Type') && $arg->getHeaderLine('Content-Type') === 'application/octet-stream';
-    }
-
-    private static function isJsonDownload(ResponseInterface $arg)
-    {
-        return $arg->hasHeader('Content-Type') && $arg->getHeaderLine('Content-Type') === 'application/octet-stream';
+        return $arg->hasHeader('Content-Type') && $arg->getHeaderLine('Content-Type') !== 'application/json';
     }
 
     private static function handleStreamResponse($arg, $stream)
