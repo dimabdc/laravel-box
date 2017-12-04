@@ -19,7 +19,7 @@ class ApiResponseFactory
             return null;
         }
 
-        if (func_num_args() == 2 && func_get_arg(1) instanceof Stream) {
+        if (func_num_args() === 2 && func_get_arg(1) instanceof Stream) {
             return self::handleStreamResponse(func_get_arg(0), func_get_arg(1));
         }
 
