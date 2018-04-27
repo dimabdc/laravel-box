@@ -4,20 +4,22 @@ namespace LaravelBox\Commands\Files;
 
 use GuzzleHttp\Client;
 use \LaravelBox\Factories\ApiResponseFactory;
+use LaravelBox\LaravelBox;
 
 class FileCollaborationsCommand extends AbstractFileCommand
 {
-    public function __construct(string $token, string $path)
+    public function __construct(LaravelBox $app, string $path)
     {
+        $this->app = $app;
         $this->fileId = $this->getFileId(basename($path));
     }
 
     public function execute()
     {
-        $url = "https://api.box.com/2.0/files/{$this->fileId}/collaborations";
+        $url = $this->app->getApiURI() . "/files/{$this->fileId}/collaborations";
         $options = [
             'headers' => [
-                'Authorization' => "Bearer {$this->token}",
+                'Authorization' => "Bearer {$this->app->getToken()}",
             ],
         ];
 

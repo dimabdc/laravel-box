@@ -4,14 +4,15 @@ namespace LaravelBox\Commands\Folders;
 
 use GuzzleHttp\Client;
 use LaravelBox\Factories\ApiResponseFactory;
+use LaravelBox\LaravelBox;
 
 class CreateFolderCommand extends AbstractFolderCommand
 {
     private $path;
 
-    public function __construct(string $token, string $path)
+    public function __construct(LaravelBox $app, string $path)
     {
-        $this->token = $token;
+        $this->app = $app;
         $this->path  = $path;
     }
 
@@ -44,7 +45,7 @@ class CreateFolderCommand extends AbstractFolderCommand
 
     private function createFolder(string $name, $parentId)
     {
-        $url     = 'https://api.box.com/2.0/folders/';
+        $url     = $this->app->getApiURI() . '/folders/';
         $options = [
             'body'    => json_encode([
                 'name'   => $name,
@@ -53,7 +54,7 @@ class CreateFolderCommand extends AbstractFolderCommand
                 ],
             ]),
             'headers' => [
-                'Authorization' => "Bearer {$this->token}",
+                'Authorization' => "Bearer {$this->app->getToken()}",
             ],
         ];
         try {

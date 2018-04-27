@@ -4,21 +4,22 @@ namespace LaravelBox\Commands\Files;
 
 use GuzzleHttp\Client;
 use LaravelBox\Factories\ApiResponseFactory;
+use LaravelBox\LaravelBox;
 
 class DeleteFileCommand extends AbstractFileCommand
 {
-    public function __construct(string $token, $path)
+    public function __construct(LaravelBox $app, $path)
     {
-        $this->token = $token;
+        $this->app = $app;
         $this->fileId = is_string($path) ? parent::getFileId($path) : $path;
     }
 
     public function execute()
     {
-        $url = "https://api.box.com/2.0/files/{$this->fileId}";
+        $url = $this->app->getApiURI() . "/files/{$this->fileId}";
         $options = [
             'headers' => [
-                'Authorization' => "Bearer {$this->token}",
+                'Authorization' => "Bearer {$this->app->getToken()}",
             ],
         ];
         try {

@@ -4,22 +4,23 @@ namespace LaravelBox\Commands\Files;
 
 use GuzzleHttp\Client;
 use LaravelBox\Factories\ApiResponseFactory;
+use LaravelBox\LaravelBox;
 
 class PreflightCheckCommand extends AbstractFileCommand
 {
     private $localPath;
     private $remotePath;
 
-    public function __construct(string $token, string $localPath, string $remotePath)
+    public function __construct(LaravelBox $app, string $localPath, string $remotePath)
     {
-        $this->token      = $token;
+        $this->app = $app;
         $this->localPath  = $localPath;
         $this->remotePath = $remotePath;
     }
 
     public function execute()
     {
-        $url     = 'https://api.box.com/2.0/files/content';
+        $url     = $this->app->getApiURI() . '/files/content';
         $body    = [
             'name'   => basename($this->localPath),
             'parent' => [
@@ -29,7 +30,7 @@ class PreflightCheckCommand extends AbstractFileCommand
         ];
         $options = [
             'headers' => [
-                'Authorization' => "Bearer {$this->token}",
+                'Authorization' => "Bearer {$this->app->getToken()}",
             ],
             'body'    => json_encode($body),
         ];

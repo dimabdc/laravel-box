@@ -18,40 +18,23 @@ class FolderCommandFactory
         $mode = array_pop($args);
         switch ($mode) {
             case 'delete':
-                if (count($args) < 3) {
-                    return null;
-                }
-
                 return new DeleteFolderCommand(...$args);
                 break;
 
             case 'create':
-                if (count($args) < 2) {
-                    return null;
-                }
-
                 return new CreateFolderCommand(...$args);
                 break;
 
             case 'list':
-                if (count($args) < 5) {
-                    return null;
-                }
-
                 return new GetFolderItemsCommand(...$args);
                 break;
 
             case 'info':
-                if (count($args) < 2) {
-                    return null;
-                }
-
                 return new GetFolderInformationCommand(...$args);
                 break;
 
             default:
-                return null;
-                break;
+                throw new \BadMethodCallException();
         }
     }
 }

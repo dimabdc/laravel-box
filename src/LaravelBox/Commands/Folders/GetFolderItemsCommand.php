@@ -4,6 +4,7 @@ namespace LaravelBox\Commands\Folders;
 
 use GuzzleHttp\Client;
 use LaravelBox\Factories\ApiResponseFactory;
+use LaravelBox\LaravelBox;
 
 class GetFolderItemsCommand extends AbstractFolderCommand
 {
@@ -11,9 +12,9 @@ class GetFolderItemsCommand extends AbstractFolderCommand
     private $limit;
     private $fields;
 
-    public function __construct(string $token, $path, int $offset, int $limit, string $fields = '')
+    public function __construct(LaravelBox $app, $path, int $offset, int $limit, string $fields = '')
     {
-        $this->token = $token;
+        $this->app = $app;
         $this->folderId = is_string($path) ? $this->getFolderId($path) : $path;
         $this->offset = $offset;
         $this->limit = $limit;
@@ -24,15 +25,15 @@ class GetFolderItemsCommand extends AbstractFolderCommand
     {
         $offset = $this->offset;
         $limit = $this->limit;
-        $url = "https://api.box.com/2.0/folders/{$this->folderId}/items";
+        $url = $this->app->getApiURI() . "/folders/{$this->folderId}/items";
         $options = [
             'query' => [
                 'offset' => ($offset >= 0) ? $offset : 0,
-                'limit' => ($limit >= 1) ? ($limit <= 1000 ? $limit : 1000) : 1,
+                'limit' => max(1, min(1000, $limit)),
                 'fields' => $this->fields
             ],
             'headers' => [
-                'Authorization' => "Bearer {$this->token}",
+                'Authorization' => "Bearer {$this->app->getToken()}",
             ],
         ];
         try {

@@ -5,25 +5,25 @@ namespace LaravelBox\Commands\Files;
 use GuzzleHttp\Client;
 use function GuzzleHttp\Psr7\stream_for;
 use LaravelBox\Factories\ApiResponseFactory;
+use LaravelBox\LaravelBox;
 
 class DownloadFileCommand extends AbstractFileCommand
 {
-    public function __construct(string $token, $remote)
+    public function __construct(LaravelBox $app, $remote)
     {
-        $this->token = $token;
+        $this->app = $app;
         $this->fileId = is_string($remote) ? $this->getFileId($remote) : $remote;
     }
 
     public function execute()
     {
         $fileId = $this->fileId;
-        $token = $this->token;
-        $url = "https://api.box.com/2.0/files/{$fileId}/content";
+        $url = $this->app->getApiURI() . "/files/{$fileId}/content";
         $stream = stream_for(tmpfile());
         $options = [
             'sink' => $stream,
             'headers' => [
-                'Authorization' => "Bearer {$token}",
+                'Authorization' => "Bearer {$this->app->getToken()}",
             ],
         ];
         try {

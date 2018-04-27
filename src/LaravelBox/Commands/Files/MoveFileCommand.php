@@ -4,24 +4,25 @@ namespace LaravelBox\Commands\Files;
 
 use GuzzleHttp\Client;
 use LaravelBox\Factories\ApiResponseFactory;
+use LaravelBox\LaravelBox;
 
 class MoveFileCommand extends AbstractFileCommand
 {
     private $newPath;
     private $oldPath;
 
-    public function __construct(string $token, $path, $newPath)
+    public function __construct(LaravelBox $app, $path, $newPath)
     {
+        $this->app = $app;
         $this->oldPath  = $path;
         $this->newPath  = $newPath;
-        $this->token    = $token;
         $this->fileId   = is_string($path) ? parent::getFileId($path) : $path;
         $this->folderId = is_string($newPath) ? parent::getFolderId(dirname($path)) : $newPath;
     }
 
     public function execute()
     {
-        $url     = "https://api.box.com/2.0/files/{$this->fileId}";
+        $url     = $this->app->getApiURI() . "/files/{$this->fileId}";
         $body    = [
             'name'   => basename($this->newPath),
             'parent' => [
@@ -30,7 +31,7 @@ class MoveFileCommand extends AbstractFileCommand
         ];
         $options = [
             'headers' => [
-                'Authorization' => "Bearer {$this->token}",
+                'Authorization' => "Bearer {$this->app->getToken()}",
             ],
             'body'    => json_encode($body),
         ];

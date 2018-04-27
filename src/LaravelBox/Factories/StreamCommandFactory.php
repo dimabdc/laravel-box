@@ -20,55 +20,31 @@ class StreamCommandFactory
         $command = array_pop($args);
         switch ($command) {
             case 'upload':
-                if (count($args) < 3) {
-                    return null;
-                }
-
                 return new UploadStreamCommand(...$args);
                 break;
 
             case 'upload-version':
-                if (count($args) < 3) {
-                    return null;
-                }
-
                 return new UploadStreamVersionCommand(...$args);
                 break;
 
             case 'upload-stream':
-                if (count($args) < 3) {
-                    return null;
-                }
-
                 return new UploadStreamContentsCommand(...$args);
                 break;
 
             case 'upload-stream-version':
-                if (count($args) < 3) {
-                    return null;
-                }
-
                 return new UploadStreamContentsVersionCommand(...$args);
                 break;
 
             case 'download':
-                if (count($args) < 2) {
-                    return null;
-                }
-
                 return new DownloadStreamCommand(...$args);
                 break;
 
             case 'thumbnail':
-                if (count($args) < 3) {
-                    return null;
-                }
-
                 return new DownloadThumbnailStreamCommand(...$args);
                 break;
 
             default:
-                return null;
+                throw new \BadMethodCallException();
         }
     }
 }

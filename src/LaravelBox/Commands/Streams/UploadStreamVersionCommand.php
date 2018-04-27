@@ -4,17 +4,18 @@ namespace LaravelBox\Commands\Streams;
 
 use LaravelBox\Commands\AbstractCommand;
 use LaravelBox\Factories\ApiResponseFactory;
+use LaravelBox\LaravelBox;
 
 class UploadStreamVersionCommand extends AbstractCommand
 {
     private $contents;
     private $remotePath;
+    private $fileId;
 
-    public function __construct(string $token, $contents, string $remotePath)
+    public function __construct(LaravelBox $app, $contents, string $remotePath)
     {
-        $this->token = $token;
+        $this->app = $app;
         $this->fileId = parent::getFileId($remotePath);
-        $this->folderId = parent::getFolderId($remotePath);
         $this->contents = $contents;
         $this->remotePath = $remotePath;
     }
@@ -28,10 +29,10 @@ class UploadStreamVersionCommand extends AbstractCommand
         rewind($fw);
         $headers = [
             'Content-Type: multipart/form-data',
-            "Authorization: Bearer {$this->token}",
+            "Authorization: Bearer {$this->app->getToken()}",
         ];
         curl_setopt($cr, CURLOPT_HTTPHEADER, $headers);
-        curl_setopt($cr, CURLOPT_URL, "https://upload.box.com/api/2.0/files/{$this->fileId}/content");
+        curl_setopt($cr, CURLOPT_URL, "https://upload.box.com/api/{$this->app->getApiVersion()}/files/{$this->fileId}/content");
         $json = json_encode([
             'name' => basename($this->remotePath),
             'parent' => [

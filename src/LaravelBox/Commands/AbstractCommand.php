@@ -4,10 +4,14 @@ namespace LaravelBox\Commands;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
+use LaravelBox\LaravelBox;
 
 abstract class AbstractCommand
 {
-    public $token;
+    /**
+     * @var LaravelBox
+     */
+    protected $app;
 
     abstract protected function execute();
 
@@ -60,10 +64,10 @@ abstract class AbstractCommand
     public function fileExists(string $fileId)
     {
         try {
-            $url     = "https://api.box.com/2.0/files/{$fileId}";
+            $url     = $this->app->getApiURI() . "/files/{$fileId}";
             $options = [
                 'headers' => [
-                    'Authorization' => "Bearer {$this->token}",
+                    'Authorization' => "Bearer {$this->app->getToken()}",
                 ],
             ];
             $client  = new Client();
@@ -78,10 +82,10 @@ abstract class AbstractCommand
     public function folderExists(string $folderId)
     {
         try {
-            $url     = "https://api.box.com/2.0/folders/{$folderId}";
+            $url     = $this->app->getApiURI() . "/folders/{$folderId}";
             $options = [
                 'headers' => [
-                    'Authorization' => "Bearer {$this->token}",
+                    'Authorization' => "Bearer {$this->app->getToken()}",
                 ],
             ];
             $client  = new Client();
@@ -99,10 +103,10 @@ abstract class AbstractCommand
             return -1;
         }
 
-        $url     = "https://api.box.com/2.0/folders/{$folderId}";
+        $url     = $this->app->getApiURI() . "/folders/{$folderId}";
         $options = [
             'headers' => [
-                'Authorization' => "Bearer {$this->token}",
+                'Authorization' => "Bearer {$this->app->getToken()}",
             ],
         ];
         try {
@@ -120,10 +124,10 @@ abstract class AbstractCommand
     {
         $limit_min = 100;
         $limit_max = 1000;
-        $url       = "https://api.box.com/2.0/folders/{$folderId}/items";
+        $url       = $this->app->getApiURI() . "/folders/{$folderId}/items";
         $options   = [
             'headers' => [
-                'Authorization' => "Bearer {$this->token}",
+                'Authorization' => "Bearer {$this->app->getToken()}",
             ],
             'query'   => [
                 'fields' => 'name',

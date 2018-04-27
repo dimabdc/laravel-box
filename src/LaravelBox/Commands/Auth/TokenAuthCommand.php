@@ -5,15 +5,18 @@ namespace LaravelBox\Commands\Auth;
 
 use GuzzleHttp\Client;
 use LaravelBox\Factories\ApiResponseFactory;
+use LaravelBox\LaravelBox;
 
 class TokenAuthCommand
 {
+    protected $app;
     protected $code;
     protected $clientId;
     protected $clientSecret;
 
-    public function __construct(string $code, string $clientId, string $clientSecret)
+    public function __construct(LaravelBox $app, string $code, string $clientId, string $clientSecret)
     {
+        $this->app = $app;
         $this->code = $code;
         $this->clientId = $clientId;
         $this->clientSecret = $clientSecret;
@@ -21,7 +24,7 @@ class TokenAuthCommand
 
     public function execute()
     {
-        $url = 'https://api.box.com/oauth2/token';
+        $url = $this->app->getApiRootURL() . '/oauth2/token';
         $options = [
             'form_params' => [
                 'grant_type' => 'authorization_code',

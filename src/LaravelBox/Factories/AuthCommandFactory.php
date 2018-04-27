@@ -17,24 +17,15 @@ class AuthCommandFactory
         $mode = array_pop($args);
         switch ($mode) {
             case 'token':
-                if (count($args) < 3) {
-                    return null;
-                }
-
                 return new TokenAuthCommand(...$args);
                 break;
 
             case 'refresh':
-                if (count($args) < 3) {
-                    return null;
-                }
-
                 return new RefreshTokenAuthCommand(...$args);
                 break;
 
             default:
-                return null;
-                break;
+                throw new \BadMethodCallException();
         }
     }
 }

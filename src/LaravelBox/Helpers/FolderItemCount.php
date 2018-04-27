@@ -5,29 +5,29 @@ namespace LaravelBox\Helpers;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use LaravelBox\Commands\AbstractCommand;
+use LaravelBox\LaravelBox;
 
 class FolderItemCount extends AbstractCommand
 {
     private $folderId;
 
-    public function __construct(string $token, string $path)
+    public function __construct(LaravelBox $app, string $path)
     {
-        $this->token = $token;
+        $this->app = $app;
         $this->folderId = parent::getFolderId($path);
     }
 
     public function execute()
     {
-        $token = $this->token;
         $folderId = $this->folderId;
         if ($folderId < 0) {
             return -1;
         }
 
-        $url = "https://api.box.com/2.0/folders/{$folderId}";
+        $url = $this->app->getApiURI() . "/folders/{$folderId}";
         $options = [
             'headers' => [
-                'Authorization' => "Bearer {$token}",
+                'Authorization' => "Bearer {$this->app->getToken()}",
             ],
         ];
         try {

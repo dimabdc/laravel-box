@@ -4,23 +4,24 @@ namespace LaravelBox\Commands\Files;
 
 use GuzzleHttp\Client;
 use LaravelBox\Factories\ApiResponseFactory;
+use LaravelBox\LaravelBox;
 
 class UploadFileVersionCommand extends AbstractFileCommand
 {
     private $localPath;
     private $remotePath;
 
-    public function __construct(string $token, string $localPath, string $remotePath)
+    public function __construct(LaravelBox $app, string $localPath, string $remotePath)
     {
-        $this->token      = $token;
+        $this->app = $app;
         $this->localPath  = $localPath;
         $this->remotePath = $remotePath;
     }
 
     public function execute()
     {
-        $fileId = parent::getFileId($this->remotePath);
-        $url    = "https://upload.box.com/api/2.0/files/{$fileId}/content";
+        $fileId = $this->getFileId($this->remotePath);
+        $url    = "https://upload.box.com/api/{$this->app->getApiVersion()}/files/{$fileId}/content";
 
         $json = json_encode([
             'name'   => basename($this->localPath),
@@ -31,11 +32,11 @@ class UploadFileVersionCommand extends AbstractFileCommand
 
         $body    = [
             'attributes' => $json,
-            'file'       => fopen($this->localPath, 'br'),
+            'file'       => fopen($this->localPath, 'rb'),
         ];
         $options = [
             'headers' => [
-                'Authorization' => "Bearer {$this->token}",
+                'Authorization' => "Bearer {$this->app->getToken()}",
             ],
             'body'    => json_encode($body),
         ];

@@ -6,24 +6,26 @@ use GuzzleHttp\Client;
 use function GuzzleHttp\Psr7\stream_for;
 use LaravelBox\Commands\AbstractCommand;
 use LaravelBox\Factories\ApiResponseFactory;
+use LaravelBox\LaravelBox;
 
 class DownloadStreamCommand extends AbstractCommand
 {
-    public function __construct(string $token, string $path)
+    private $fileId;
+
+    public function __construct(LaravelBox $app, string $path)
     {
-        $this->token = $token;
+        $this->app = $app;
         $this->fileId = parent::getFileId($path);
-        $this->folderId = parent::getFolderId(dirname($path));
     }
 
     public function execute()
     {
-        $url = "https://api.box.com/2.0/files/{$this->fileId}/content";
+        $url = $this->app->getApiURI() . "/files/{$this->fileId}/content";
         $stream = stream_for(tmpfile());
         $options = [
             'sink' => $stream,
             'headers' => [
-                'Authorization' => "Bearer {$this->token}",
+                'Authorization' => "Bearer {$this->app->getToken()}",
             ],
         ];
 
@@ -37,3 +39,4 @@ class DownloadStreamCommand extends AbstractCommand
         }
     }
 }
+

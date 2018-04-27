@@ -4,21 +4,21 @@ namespace LaravelBox\Commands\Files;
 
 use GuzzleHttp\Client;
 use LaravelBox\Factories\ApiResponseFactory;
+use LaravelBox\LaravelBox;
 
 class LockFileCommand extends AbstractFileCommand
 {
-    public function __construct(string $token, string $path)
+    public function __construct(LaravelBox $app, string $path)
     {
-        $this->token = $token;
+        $this->app = $app;
         $this->fileId = parent::getFileId($path);
         $this->folderId = parent::getFolderId(dirname($path));
     }
 
     public function execute()
     {
-        $token = $this->token;
         $fileId = $this->fileId;
-        $url = "https://api.box.com/2.0/files/{$fileId}";
+        $url = $this->app->getApiURI() . "/files/{$fileId}";
         $body = [
             'lock' => [
                 'type' => 'lock',
@@ -29,7 +29,7 @@ class LockFileCommand extends AbstractFileCommand
         $options = [
             'body' => json_encode($body),
             'headers' => [
-                'Authorization' => "Bearer {$token}",
+                'Authorization' => "Bearer {$this->app->getToken()}",
             ],
         ];
         try {

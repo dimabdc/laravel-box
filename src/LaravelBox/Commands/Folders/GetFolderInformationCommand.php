@@ -4,21 +4,22 @@ namespace LaravelBox\Commands\Folders;
 
 use GuzzleHttp\Client;
 use LaravelBox\Factories\ApiResponseFactory;
+use LaravelBox\LaravelBox;
 
 class GetFolderInformationCommand extends AbstractFolderCommand
 {
-    public function __construct(string $token, $path)
+    public function __construct(LaravelBox $app, $path)
     {
-        $this->token = $token;
+        $this->app = $app;
         $this->folderId = is_string($path) ? $this->getFolderId($path) : $path;
     }
 
     public function execute()
     {
-        $url = "https://api.box.com/2.0/folders/{$this->folderId}";
+        $url = $this->app->getApiURI() . "/folders/{$this->folderId}";
         $options = [
         'headers' => [
-            'Authorization' => "Bearer {$this->token}",
+            'Authorization' => "Bearer {$this->app->getToken()}",
         ],
         ];
 
